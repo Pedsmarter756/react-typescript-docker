@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import {
+import
+{
   requireAuth,
   validateRequest,
   BadRequestError,
@@ -21,25 +22,41 @@ router.post(
   requireAuth,
   [body("token").not().isEmpty(), body("orderId").not().isEmpty()],
   validateRequest,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response) =>
+  {
     const { token, orderId } = req.body;
 
     const order = await Order.findById(orderId);
 
-    if (!order) {
+    if (!order)
+    {
       throw new NotFoundError();
     }
-    if (order.userId !== req.currentUser!.id) {
+    if (order.userId !== req.currentUser!.id)
+    {
       throw new NotAuthorizedError();
     }
-    if (order.status === OrderStatus.Cancelled) {
+    if (order.status === OrderStatus.Cancelled)
+    {
       throw new BadRequestError("Cannot pay for an cancelled order");
     }
 
-    const charge = await stripe.charges.create({
+    // const charge = await stripe.charges.create({
+    //   currency: "usd",
+    //   amount: order.price * 100,
+    //   source: token,
+    // });
+    const charge = await stripe.paymentIntents.create({
       currency: "usd",
       amount: order.price * 100,
-      source: token,
+      payment_method_types: ['card'],
+      payment_method_data: {
+        //@ts-ignore
+        type: "card",
+        card: {
+          token: token,
+        },
+      },
     });
     const payment = Payment.build({
       orderId,

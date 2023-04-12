@@ -1,3 +1,43 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: orders-mongo-pv
+spec:
+  capacity:
+    storage: 512Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/orders-mongo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: orders-mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 512Mi
+  storageClassName: ''
+  volumeName: orders-mongo-pv
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-mongo-srv
+spec:
+  selector:
+    app: orders-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,16 +55,19 @@ spec:
       containers:
         - name: orders-mongo
           image: mongo
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: orders-mongo-srv
-spec:
-  selector:
-    app: orders-mongo
-  ports:
-    - name: db
-      protocol: TCP
-      port: 27017
-      targetPort: 27017
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: orders-mongo-persistent-storage
+              mountPath: /data/db
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 0.5
+            requests:
+              memory: 256Mi
+              cpu: 0.25
+      volumes:
+        - name: orders-mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: orders-mongo-pvc

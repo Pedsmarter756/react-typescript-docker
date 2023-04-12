@@ -18,12 +18,14 @@ const useRequest = ({ url, method, body, onSuccess }) => {
       return response.data;
     } catch (err)
     {
+      console.log(`error :------${err}`)
       setErrors(
         <div>
           <ul className="my-0">
-            {err.response.data.errors.map((err) => (
+            {/* {err.response.data.errors.map((err) => (
               <li key={err.message}>{err.message}</li>
-            ))}
+            ))} */}
+            {`something bad happens ${err}`}
           </ul>
         </div>
       );
