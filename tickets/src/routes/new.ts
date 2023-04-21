@@ -17,13 +17,29 @@ router.post(
       .withMessage("Price must be greater than 0"),
   ],
   validateRequest,
-  async (req: Request, res: Response) => {
-    const { title, price } = req.body;
+  async (req: Request, res: Response) =>
+  {
+    const {
+      title,
+      price,
+      category,
+      subcategory,
+      location,
+      address,
+      date,
+      time
+    } = req.body;
 
     const ticket = Ticket.build({
       title,
       price,
       userId: req.currentUser!.id,
+      category: category ? category : undefined,
+      subcategory: subcategory ? subcategory : undefined,
+      location: location ? location : undefined,
+      address: address ? address : undefined,
+      date: date ? date : undefined,
+      time: time ? time.toString() : undefined
     });
     await ticket.save();
     new TicketCreatedPublisher(natsWrapper.client).publish({

@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { Container } from '@mui/material';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -31,9 +32,9 @@ const Header = ({ currentUser }) => {
     .filter((linkConfig) => linkConfig)
     .map(({ label, href }) => {
       return (
-        <Button key={label} sx={{ color: '#fff', marginRight: 4 }}>
+        <Button key={label} sx={{ color: '#000', marginRight: 3 }}>
           <Link href={href}>
-            <a className="nav-link" style={{ textTransform: 'capitalize' }}>{label}</a>
+            <a className="nav-link" style={{ textTransform: 'capitalize', fontWeight: 'bolder' }}>{label}</a>
           </Link>
         </Button>
 
@@ -79,52 +80,69 @@ const Header = ({ currentUser }) => {
     //     <ul className="nav d-flex align-items-center">{links}</ul>
     //   </div>
     // </nav>
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar component="nav" style={{ backgroundColor: '#000' }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            Ticket Hub
-          </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {links}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Box component="nav">
-        <Drawer
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar component="nav" style={{ backgroundColor: '#fff', boxShadow: 'none' }} >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: 'none' } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ marginLeft: 8, flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            >
+              <Link href={`/`}>
+                <img src="/ticket-hub.svg" />
+              </Link>
 
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box component="main" sx={{ p: 3 }}>
+            </Typography>
+            <Box sx={{ display: { xs: 'none', sm: 'block', } }} style={{ marginRight: 36 }}>
+              {links}
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Box component="nav">
+          <Drawer
 
-      </Box>
-    </Box>
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: 'block', sm: 'none' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box component="main" sx={{ p: 3 }}>
+
+        </Box>
+      </Box >
+      <Container>
+        <div style={{
+          marginTop: 36, marginBottom: 16, display: 'flex', gap: 32, fontWeight: 'bolder'
+        }}>
+          <span >Sports</span>
+          <span>Movie</span>
+          <span>Concert</span>
+          <span>Sneakers</span>
+
+        </div>
+      </Container>
+    </>
+
   );
 };
 
